@@ -1,0 +1,221 @@
+/* body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9; /* Soft light background */
+} */
+
+h1 {
+    color: #2c3e50; /* Darker shade for headers */
+    margin-bottom: 20px;
+}
+
+#content {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: flex-start;
+    padding-right: 20px;
+    padding-left: 10px;
+    background-color: #ffffff; /* Clean white background */
+}
+
+#text-area {
+    width: 45%; /* Adjust as needed */
+}
+
+#video-section {
+    width: 50%; /* Adjust as needed */
+}
+
+#video-title-container {
+    position: relative;
+    width: 700px; /* Same as the video player width */
+    overflow: hidden; /* Hide the overflowing text */
+    white-space: nowrap; /* Ensure the text is on one line */
+    border: 2px solid transparent; /* Optional border for clarity */
+}
+
+#video-title {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 10px;
+    animation: none; /* Default to no animation */
+}
+
+/* Define the marquee animation */
+@keyframes marquee {
+    from {
+        transform: translateX(100%); /* Start from the right */
+    }
+    to {
+        transform: translateX(-100%); /* Move to the left */
+    }
+}
+
+.marquee {
+    animation: marquee 10s linear infinite; /* Smooth scrolling animation */
+}
+textarea {
+    padding: 10px;
+    margin: 85px 0 15px 0;
+    border: 1px solid #bdc3c7; /* Soft border for textarea */
+    border-radius: 4px;
+    width: 45%;
+    height: 90px;
+    resize: none;
+    background-color: #ecf0f1; /* Subtle background for text area */
+    transition: transform 0.2s ease-in-out; /* Add transition for zoom effect */
+}
+
+textarea:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #bdc3c7; /* Soft border for input */
+    border-radius: 4px;
+    width: 100%;
+    background-color: #ecf0f1; /* Subtle background for input fields */
+    transition: transform 0.2s ease-in-out;
+}
+
+input[type="text"]:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #3498db; /* Professional blue color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s ease-in-out; /* Add transition for zoom effect */
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+#recording-controls {
+    margin-top: 20px;
+}
+
+#recordingStatus {
+    font-weight: bold;
+    color: #e74c3c; /* Red for recording error status */
+    margin-top: 10px;
+}
+
+#isl-video-player {
+    display: block;
+    margin: 20px 0;
+    border: 3px solid #7f8c8d; /* Soft gray border around the video player */
+    border-radius: 8px;
+    background-color: #000000;
+    width: 100%;
+    max-width: 700px;
+    height: 375px;
+    max-height: 700px;
+    transition: transform 0.2s ease-in-out;
+}
+
+#isl-video-player:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+#video-controls {
+    margin-top: 10px;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+#video-controls button {
+    padding: 10px 15px;
+    background-color: #1abc9c; /* Soft green button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+#video-controls button:hover {
+    background-color: #16a085; /* Darker green on hover */
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+#video-controls select {
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    background-color: #ecf0f1;
+}
+
+.button-group {
+    margin-top: 10px;
+}
+
+.button-group button {
+    margin: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.button-group button:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+#scrollable-box {
+    width: 300px;
+    height: 350px;
+    border: 3px solid #bdc3c7; /* Soft border for scrollable box */
+    padding: 10px;
+    border-radius: 5px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    margin-top: 115px;
+}
+
+#scrollable-box ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#scrollable-box ul li {
+    padding: 8px;
+    margin: 5px 0;
+    background-color: #ecf0f1; /* Light gray for list items */
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    transition: transform 0.2s ease-in-out;
+}
+
+#scrollable-box ul li:hover {
+    transform: scale(1.05); /* Zoom effect on hover for list items */
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+MLP_Keras_model.h5
+__pycache__/
+backup_app.py
+islenv/
+merge_vedio_script.py
+merge_videos/
+model.p
+myenv/
+static/isl_videos/
+temp_video.webm
