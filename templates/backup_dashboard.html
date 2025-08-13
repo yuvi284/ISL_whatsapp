@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignChat Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: #f0f2f5;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: row;
+    width: 320px;
+    background: #202c33;
+    color: white;
+    border-right: 1px solid #2a3942;
+}
+.brand {
+    font-size: 1.2rem;
+    padding: 1rem;
+    background: #202c33;
+    border-bottom: 1px solid #333;
+}
+.sidebar-actions-strip {
+    width: 60px;
+    background: #111b21;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 0;
+    border-right: 1px solid #222;
+    gap: 1rem;
+    /* height: 100vh; */
+}
+
+.sidebar-actions-strip .top-space {
+    flex-grow: 1;
+}
+
+.sidebar-actions-strip button {
+    background: #2a3942;
+    border: none;
+    color: white;
+    padding: 0.6rem;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.2s ease;
+}
+
+.sidebar-actions-strip button:hover {
+    background: #3b4a54;
+}
+.sidebar-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.search-box {
+    padding: 0.5rem;
+    background: #111b21;
+    border-bottom: 1px solid #222;
+}
+
+.search-box input {
+    width: 95%;
+    padding: 0.5rem;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: #2a3942;
+    color: white;
+}
+
+.unread-badge {
+    background: #25d366;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+}
+
+.contact-list {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.contact-item {
+    padding: 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #222;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #e9edef;
+}
+
+.contact-item:hover {
+    background: #2a3942;
+}
+
+.chat-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: url('/static/images/student_background.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.chat-header {
+    background: #202c33;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 1px solid #333;
+}
+
+.chat-history {
+    flex-grow: 1;
+    padding: 1.2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.chat-message {
+    position: relative; /* Ensure the message bubble is a positioning context */
+    max-width: 60%;
+    padding: 0.7rem 1rem;
+    margin: 0.4rem 0;
+    border-radius: 7px;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.chat-message.sent {
+    background: #d9fdd3;
+    align-self: flex-end;
+}
+
+.chat-message.received {
+    background: #fff;
+    align-self: flex-start;
+}
+
+.chat-input {
+    display: flex;
+    flex-direction: column;
+    padding: 0.7rem;
+    background: #202c33;
+    border-top: 1px solid #333;
+}
+
+.chat-input textarea {
+    width: 98%;
+    padding: 0.6rem;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 0.9rem;
+    background: #2a3942;
+    color: white;
+}
+
+.chat-actions {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.chat-actions select,
+.chat-actions button {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #2a3942;
+    color: white;
+    font-size: 0.85rem;
+}
+.msg-options {
+    position: absolute;
+    background: #2a3942;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 0.5rem;
+    display: none;
+    flex-direction: column;
+    z-index: 999;
+}
+.msg-options button {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    text-align: left;
+}
+.msg-options button:hover {
+    background: #3b4a54;
+}
+.chat-actions button {
+    background: #d9534f;
+}
+.contact-menu {
+    position: absolute;
+    /* right: 10px; */
+    top: 35px;
+    background: #2a3942;
+    border: 1px solid #333;
+    border-radius: 5px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    min-width: 140px;
+}
+
+.contact-menu button {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    text-align: left;
+    /* width: 100%; */
+}
+
+.contact-menu button:hover {
+    background: #3b4a54;
+}
+
+.contact-menu-icon {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.contact-menu-icon:hover {
+    background: #3b4a54;
+}
+
+.message-ellipsis {
+    position: absolute;
+    top: 6px; /* Adjust as needed for vertical positioning */
+    right: 8px; /* Adjust as needed for horizontal positioning */
+    font-size: 0.9rem;
+    color: #777;
+    cursor: pointer;
+    visibility: hidden;
+    z-index: 5;
+}
+
+.chat-message:hover .message-ellipsis {
+    visibility: visible;
+}
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 35%;
+            }
+        }
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .chat-area {
+                margin-top: 0.5rem;
+            }
+        }
+
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        position: relative;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #202c33;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+        transform: translateX(0);
+    }
+
+    .sidebar.hide {
+        transform: translateX(-100%);
+    }
+
+    .chat-area {
+        width: 100%;
+        height: 100vh;
+        display: none;
+        flex-direction: column;
+    }
+
+    .chat-area.show {
+        display: flex;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar-actions-strip {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.5rem;
+        border-right: none;
+        border-bottom: 1px solid #222;
+        width: 96%;
+    }
+}
+@media (max-width: 768px) {
+    .contact-menu {
+        left: 80% !important;
+        transform: translateX(-50%);
+        top: 50px;
+        min-width: 60%;
+        max-width: 80%;
+    }
+}
+
+    </style>
+</head>
+<body>
+<div class="container">
+   <div class="sidebar">
+    
+    <!-- Vertical Strip with Icon Buttons -->
+    <div class="sidebar-actions-strip">
+        <div class="top-space"></div> <!-- Empty flexible space -->
+
+        <button title="Edit Profile" onclick="editProfile()">
+            <i class="fas fa-user-edit"></i>
+        </button>
+        <button title="Settings" onclick="logout()">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <!-- Rest of the Sidebar Content -->
+    <div class="sidebar-content">
+        <div class="brand">Welcome, {{ user_info['username'] }}</div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search contacts..." onkeyup="searchContact()">
+        </div>
+
+        <div class="contact-list" id="contactList">
+            {% for mobile, name in students.items() %}
+                <div class="contact-item" data-name="{{ name }}" data-mobile="{{ mobile }}" onclick="loadChat('{{ mobile }}', '{{ name }}')">
+                    {{ name }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+
+    <div class="chat-area">
+        <div class="chat-header">
+    <div style="display: flex; align-items: center; gap: 10px;">
+    <button id="backBtn" onclick="goBack()" style="display:none; background:none; border:none; color:white; font-size:1.2rem;">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <img id="contactImage" src="/static/uploads/3d.jpg" alt="DP" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+    <div>
+        <div id="contactName" style="font-weight: bold;">Select a contact</div>
+        <div id="contactMobile" style="font-size: 0.8rem; color: #ccc;"></div>
+    </div>
+</div>
+
+</div>
+
+
+        <div class="chat-history" id="chatHistory">
+            <p style="color:#555;">No conversation selected.</p>
+        </div>
+
+        <div class="chat-input" id="chatInput">
+            <textarea id="messageText" rows="2" placeholder="Type a message..."></textarea>
+            <div class="chat-actions">
+                <select id="languageSelect">
+                    <option value="hi-IN">Hindi</option>
+                    <option value="en-US">English</option>
+                </select>
+                <button id="speakToggle">🎤 Speak</button>
+                <button onclick="sendMessage()">Send</button>
+                <button id="opn_camera">📷 Camera</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentChatUser = null;
+    const currentUserMobile = "{{ user_info['mobile'] }}";
+    let recognition = null;
+function loadChat(userMobile, name) {
+    currentChatUser = userMobile;
+
+    const sidebar = document.querySelector('.sidebar');
+    const chatArea = document.querySelector('.chat-area');
+    const backBtn = document.getElementById('backBtn');
+
+    if (window.innerWidth <= 768) {
+        sidebar.classList.add('hide');
+        chatArea.classList.add('show');
+        backBtn.style.display = "inline";
+    } else {
+        backBtn.style.display = "none";
+    }
+
+    // Fetch contact image
+    fetch(`/get_contact_image?mobile=${userMobile}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("contactImage").src = data.profile_picture || "/static/uploads/3d.jpg";
+        });
+
+    document.getElementById("contactName").innerText = name;
+    document.getElementById("contactMobile").innerText = userMobile;
+
+    const chatBox = document.getElementById("chatHistory");
+    chatBox.innerHTML = "";
+
+    fetch(`/get_messages?contact=${userMobile}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.messages.length === 0) {
+                chatBox.innerHTML = "<p style='color:#555;'>No messages yet. Start the conversation!</p>";
+            } else {
+                data.messages.forEach(msg => {
+                    const div = document.createElement("div");
+                    div.classList.add("chat-message", msg.sender_mobile === currentUserMobile ? "sent" : "received");
+
+                    // Message content
+                    const messageText = document.createElement("div");
+                    messageText.innerText = msg.message_content;
+                    div.appendChild(messageText);
+
+                    // Message metadata (time and read status)
+                    const meta = document.createElement("div");
+                    meta.style.fontSize = "0.75rem";
+                    meta.style.marginTop = "4px";
+                    meta.style.color = "#555";
+                    meta.style.display = "flex";
+                    meta.style.justifyContent = "space-between";
+                    meta.style.alignItems = "center";
+
+                    const timeSpan = document.createElement("span");
+                    timeSpan.innerText = msg.created_at;
+                    meta.appendChild(timeSpan);
+
+                    if (msg.sender_mobile === currentUserMobile) {
+                        const seenIcon = document.createElement("i");
+                        seenIcon.classList.add("fas", "fa-check-double");
+                        seenIcon.style.marginLeft = "8px";
+                        seenIcon.style.color = msg.seen == 1 ? "#4fc3f7" : "#999";
+                        meta.appendChild(seenIcon);
+                    }
+
+                    div.appendChild(meta);
+
+                    // Message options ellipsis
+                    const dotMenu = document.createElement("div");
+                    dotMenu.classList.add("message-ellipsis");
+                    dotMenu.innerHTML = `<i class="fas fa-ellipsis-v"></i>`;
+                    dotMenu.addEventListener("click", (e) => {
+                        e.stopPropagation();
+
+                        const bubbleRect = div.getBoundingClientRect();
+                        const isSent = div.classList.contains("sent");
+
+                        const menuWidth = 150;
+                        const padding = 10;
+
+                        const x = isSent
+                            ? bubbleRect.right - menuWidth - padding
+                            : bubbleRect.left + padding;
+
+                        const y = bubbleRect.top + window.scrollY + 25;
+
+                        // Updated to pass message content
+                        showMessageOptions(x, y, msg.message_id, msg.message_content);
+                    });
+
+                    div.appendChild(dotMenu);
+
+                    // Add click handler to show options on message click (optional)
+                    div.addEventListener("click", (e) => {
+                        if (e.target.classList.contains("message-ellipsis")) return;
+                        
+                        const rect = div.getBoundingClientRect();
+                        const x = rect.left + (rect.width / 2);
+                        const y = rect.top + window.scrollY + 25;
+                        
+                        showMessageOptions(x, y, msg.message_id, msg.message_content);
+                    });
+
+                    chatBox.appendChild(div);
+                });
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+    document.getElementById("chatInput").style.display = "flex";
+
+    // Mark messages as seen
+    fetch('/mark_seen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contact_mobile: userMobile })
+    });
+}
+
+
+
+
+   function sendMessage() {
+    const text = document.getElementById("messageText").value.trim();
+    if (!text || !currentChatUser) return;
+
+    fetch('/send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            receiver_mobile: currentChatUser,
+            message: text
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("messageText").value = "";
+           loadChat(currentChatUser, document.getElementById("contactName").innerText);
+
+        }
+    });
+}
+
+
+ function filterContacts() {
+    const filter = document.getElementById("searchInput").value.toLowerCase();
+    const contacts = document.querySelectorAll(".contact-item");
+
+    let anyVisible = false;
+
+    contacts.forEach(contact => {
+        const name = contact.dataset.name.toLowerCase();
+        const mobile = contact.dataset.mobile.toLowerCase();
+
+        if (name.includes(filter) || mobile.includes(filter) || filter === "") {
+            contact.style.display = "block";
+            anyVisible = true;
+        } else {
+            contact.style.display = "none";
+        }
+    });
+
+    // If search is cleared (empty), reset chat area
+    if (filter === "") {
+        currentChatUser = null;
+        document.getElementById("chatWith").innerText = "Select a contact to start chat";
+        
+        const chatBox = document.getElementById("chatHistory");
+        chatBox.innerHTML = "<p style='color:#555;'>No conversation selected.</p>";
+
+        document.getElementById("chatInput").style.display = "none";
+    }
+}
+
+
+    function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+            window.location.href = "/logout";
+        }
+    }
+
+
+
+    document.getElementById("speakToggle").addEventListener("click", () => {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech Recognition not supported in this browser.");
+            return;
+        }
+
+        const language = document.getElementById("languageSelect").value;
+        recognition = new webkitSpeechRecognition();
+        recognition.lang = language;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById("messageText").value = transcript;
+        };
+
+        recognition.onerror = function(event) {
+            alert("Error occurred in recognition: " + event.error);
+        };
+    });
+
+    function searchContact() {
+    const input = document.getElementById("searchInput").value.trim();
+    const contactList = document.getElementById("contactList");
+
+    // Agar empty hai toh puri saved list reload karo
+    if (input === "") {
+        loadSavedContacts();
+        return;
+    }
+
+    contactList.innerHTML = "";  // Old list clear
+
+    fetch(`/search_contact?mobile=${input}`)
+        .then(res => res.json())
+        .then(data => {
+            
+            if (data.status === "multiple") {
+                
+                if (data.contacts.length === 0) {
+                    contactList.innerHTML = `<div class="contact-item">No matching contacts found.</div>`;
+                    return;
+                }
+
+                data.contacts.forEach(contact => {
+                    
+                    // Saved Contact
+                    if (contact.status === "saved") {
+                        contactList.innerHTML += `
+                            <div class="contact-item" onclick="loadChat('${contact.mobile}', '${contact.name}')">
+                                ${contact.name}
+                            </div>`;
+                    } 
+                    
+                    // Unsaved Registered Contact
+                    else if (contact.status === "registered") {
+                        contactList.innerHTML += `
+                            <div class="contact-item">
+                                ${contact.mobile}
+                                <button style="margin-left:10px;" onclick="saveContact('${contact.mobile}', '${contact.mobile}')">Save Contact</button>
+                            </div>`;
+                    }
+
+                });
+
+            } 
+            
+            else if (data.status === "not_registered") {
+                contactList.innerHTML = `<div class="contact-item">Not Registered Contact</div>`;
+            }
+            
+            else {
+                contactList.innerHTML = `<div class="contact-item">No results found.</div>`;
+            }
+        })
+        .catch(err => {
+            console.error("Search Error:", err);
+            contactList.innerHTML = `<div class="contact-item">Error fetching results.</div>`;
+        });
+}
+
+
+
+
+function saveContact(mobile, name) {
+    const nickname = prompt("Enter name to save this contact:", name);
+    if (!nickname) return;
+
+    fetch('/save_contact', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({contact_mobile: mobile, nickname: nickname})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Contact Saved!");
+            searchContact();  // Refresh list
+        } else {
+            alert("Error saving contact.");
+        }
+    });
+}
+
+
+function loadSavedContacts() {
+    const contactList = document.getElementById("contactList");
+    contactList.innerHTML = "";
+
+    fetch('/get_saved_contacts')
+        .then(res => res.json())
+        .then(data => {
+            if (data.contacts && data.contacts.length > 0) {
+                data.contacts.forEach(contact => {
+                    let badge = contact.unread > 0 
+                        ? `<span class="unread-badge">${contact.unread}</span>` 
+                        : "";
+                    
+                    contactList.innerHTML += `
+                        <div class="contact-item" id="contact-${contact.mobile}" style="justify-content: space-between; position: relative;">
+                            <div onclick="loadChat('${contact.mobile}', '${contact.nickname}')" style="flex:1; cursor:pointer;">
+                                ${contact.nickname} ${badge}
+                            </div>
+                            <div class="contact-menu-icon" onclick="showContactOptions(event, '${contact.mobile}', '${contact.nickname}')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                contactList.innerHTML = "<div class='contact-item'>No saved contacts.</div>";
+            }
+        });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadSavedContacts();
+});
+
+function editProfile() {
+    alert("Edit Profile clicked - implement logic here");
+}
+
+function openSettings() {
+    alert("Settings clicked - implement logic here");
+}
+
+let selectedMessageId = null;
+
+function showMessageOptions(x, y, messageId) {
+    const menu = document.getElementById("msgOptions");
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+    menu.style.display = "flex";
+    selectedMessageId = messageId;
+}
+
+document.addEventListener("click", () => {
+    document.getElementById("msgOptions").style.display = "none";
+});
+
+function deleteMessage() {
+    if (!selectedMessageId) return;
+
+    if (confirm("Are you sure you want to delete this message?")) {
+        fetch('/delete_message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message_id: selectedMessageId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+               loadChat(currentChatUser, document.getElementById("contactName").innerText);
+
+            } else {
+                alert("Failed to delete message.");
+            }
+        });
+    }
+}
+
+function openCamera() {
+    alert("Camera Open Logic Here");  
+    // Tumhare existing camera ka logic call karo
+    document.getElementById("opn_camera").click();
+}
+function deleteMessage() {
+    if (!selectedMessageId) return;
+
+    if (confirm("Are you sure you want to delete this message?")) {
+        fetch('/delete_message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message_id: selectedMessageId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+               loadChat(currentChatUser, document.getElementById("contactName").innerText);
+ // Reload chat after delete
+            } else {
+                alert("Failed to delete message.");
+            }
+        });
+    }
+}
+
+document.addEventListener("click", () => {
+    document.getElementById("msgOptions").style.display = "none";
+});
+
+
+let selectedContactMobile = null;
+let selectedContactName = null;
+
+function showContactOptions(event, mobile, name) {
+    event.stopPropagation();
+
+    const menu = document.getElementById("contactOptionsMenu");
+    menu.style.left = `${event.pageX}px`;
+    menu.style.top = `${event.pageY}px`;
+    menu.style.display = "flex";
+
+    selectedContactMobile = mobile;
+    selectedContactName = name;
+}
+
+document.addEventListener("click", () => {
+    document.getElementById("contactOptionsMenu").style.display = "none";
+});
+
+function editContactName() {
+    if (!selectedContactMobile) return;
+
+    const newName = prompt("Enter new name:", selectedContactName);
+    if (!newName) return;
+
+    fetch('/edit_contact_name', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile: selectedContactMobile, new_name: newName })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Contact name updated!");
+            loadSavedContacts();
+        } else {
+            alert("Failed to update name.");
+        }
+    });
+}
+
+function deleteContact() {
+    if (!selectedContactMobile) return;
+
+    if (confirm(`Delete contact ${selectedContactName}?`)) {
+        fetch('/delete_contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile: selectedContactMobile })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Contact deleted!");
+                loadSavedContacts();
+            } else {
+                alert("Failed to delete contact.");
+            }
+        });
+    }
+}
+
+function deleteContactMessages() {
+    if (!selectedContactMobile) return;
+
+    if (confirm(`Delete all messages with ${selectedContactName}?`)) {
+        fetch('/delete_contact_messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile: selectedContactMobile })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Messages deleted!");
+                if (currentChatUser === selectedContactMobile) {
+                    document.getElementById("chatHistory").innerHTML = "<p style='color:#555;'>No conversation selected.</p>";
+                }
+            } else {
+                alert("Failed to delete messages.");
+            }
+        });
+    }
+}
+document.getElementById("chatHistory").addEventListener("scroll", () => {
+    document.getElementById("msgOptions").style.display = "none";
+});
+
+function goBack() {
+    const sidebar = document.querySelector('.sidebar');
+    const chatArea = document.querySelector('.chat-area');
+    const backBtn = document.getElementById('backBtn');
+
+    sidebar.classList.remove('hide');
+    chatArea.classList.remove('show');
+    backBtn.style.display = "none";
+}
+
+</script>
+
+<div class="msg-options" id="msgOptions">
+    <button onclick="deleteMessage()">🗑️ Delete Message</button>
+    <button onclick="convertToISL()">📷 Convert ISL Message</button>
+</div>
+
+<div class="contact-menu" id="contactOptionsMenu">
+    <button onclick="editContactName()">✏️ Edit Name</button>
+    <button onclick="deleteContact()">🗑️ Delete Contact</button>
+    <button onclick="deleteContactMessages()">🗑️ Delete Messages</button>
+</div>
+
+<script>
+    let selectedMessageText = null;
+
+    function showMessageOptions(x, y, messageId, messageText) {
+        const menu = document.getElementById("msgOptions");
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y}px`;
+        menu.style.display = "flex";
+        selectedMessageId = messageId;
+        selectedMessageText = messageText;  // Store the message text
+    }
+
+    function convertToISL() {
+        if (!selectedMessageText) return;
+
+        // Convert chatHistory to video display
+        const chatHistory = document.getElementById("chatHistory");
+        chatHistory.innerHTML = `
+            <video id="islVideo" controls autoplay style="width:100%; max-height:500px;">
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <button onclick="exitVideoMode()" style="margin-top:10px; padding:8px 15px; background:#d9534f; color:white; border:none; border-radius:5px;">
+                Exit Video Mode
+            </button>
+        `;
+
+        // Fetch ISL videos from backend
+        fetch('/convert_to_isl', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: selectedMessageText })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.videos && data.videos.length > 0) {
+                const videoElement = document.getElementById("islVideo");
+                let currentVideoIndex = 0;
+                
+                // Play first video
+                videoElement.src = data.videos[currentVideoIndex];
+                
+                // Queue up next videos when current ends
+                videoElement.onended = function() {
+                    currentVideoIndex++;
+                    if (currentVideoIndex < data.videos.length) {
+                        videoElement.src = data.videos[currentVideoIndex];
+                        videoElement.play();
+                    } else {
+                        exitVideoMode();
+                    }
+                };
+            } else {
+                alert("No ISL videos found for this message");
+                exitVideoMode();
+            }
+        })
+        .catch(err => {
+            console.error("ISL conversion error:", err);
+            alert("Error converting to ISL");
+            exitVideoMode();
+        });
+    }
+
+    function exitVideoMode() {
+        // Restore original chat view
+        if (currentChatUser) {
+            loadChat(currentChatUser, document.getElementById("contactName").innerText);
+        } else {
+            document.getElementById("chatHistory").innerHTML = "<p style='color:#555;'>No conversation selected.</p>";
+        }
+    }
+</script>
+
+
+<script>
+
+    let cameraActive = false;
+    let videoStream = null;
+    let cameraInterval = null;
+
+    document.getElementById("opn_camera").addEventListener("click", () => {
+        if (!cameraActive) {
+            startCamera();
+        } else {
+            stopCamera();
+        }
+    });
+
+    function startCamera() {
+        fetch('/start_camera')
+            .then(() => {
+                cameraActive = true;
+                document.getElementById("opn_camera").innerText = "❌ Close Camera";
+
+                const timestamp = new Date().getTime();
+                document.getElementById("chatHistory").innerHTML = `
+                    <img id="cameraFeed" src="/video_feed?t=${timestamp}" 
+                        style="width: 100%; max-height: 500px; object-fit: contain;" />
+                `;
+
+                // ✅ Start polling every second to update messageText from final_sentence
+                window.finalSentencePoll = setInterval(() => {
+                    fetch("/get_final_sentence")
+                        .then(res => res.json())
+                        .then(data => {
+                            const messageBox = document.getElementById("messageText");
+                            // Only update if user isn't typing
+                            if (document.activeElement !== messageBox) {
+                                messageBox.value = data.text;
+                            }
+                        });
+                }, 1000);
+            });
+    }
+
+    function stopCamera() {
+        fetch('/stop_camera')
+            .then(() => {
+                cameraActive = false;
+                document.getElementById("opn_camera").innerText = "📷 Camera";
+                document.getElementById("chatHistory").innerHTML = "<p style='color:#555;'>No conversation selected.</p>";
+
+                // ✅ Stop polling
+                clearInterval(window.finalSentencePoll);
+            });
+    }
+    
+    document.getElementById("messageText").addEventListener("input", () => {
+        const text = document.getElementById("messageText").value;
+        fetch('/update_final_sentence', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
+    });
+</script>
+
+</body>
+</html>
